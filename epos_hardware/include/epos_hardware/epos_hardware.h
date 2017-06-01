@@ -24,6 +24,7 @@ public:
   void write();
   bool stop_homing();
   bool start_homing();
+  bool clear_faults();
   void update_diagnostics();
 private:
   hardware_interface::ActuatorStateInterface asi;

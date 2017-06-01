@@ -5,6 +5,7 @@
 #include <vector>
 #include "epos_hardware/StopHoming.h"
 #include "epos_hardware/StartHoming.h"
+#include "epos_hardware/ClearFaults.h"
 
 bool stopHoming(epos_hardware::StopHoming::Request  &req,
     epos_hardware::StopHoming::Response &res, epos_hardware::EposHardware* robot)
@@ -19,6 +20,15 @@ bool startHoming(epos_hardware::StartHoming::Request &req,
 {
     res.started = robot->start_homing();
     if(res.started == true)
+        return true;
+
+}
+
+bool clearFaults(epos_hardware::ClearFaults::Request &req,
+    epos_hardware::ClearFaults::Response &res, epos_hardware::EposHardware* robot)
+{
+    res.clear_faults = robot->clear_faults();
+    if(res.clear_faults == true)
         return true;
 
 }
@@ -42,9 +52,12 @@ int main(int argc, char** argv) {
   stop_homing_cb = boost::bind(&stopHoming, _1, _2, &robot);
   boost::function<bool(epos_hardware::StartHoming::Request & req, epos_hardware::StartHoming::Response & res)>
   start_homing_cb = boost::bind(&startHoming, _1, _2, &robot);
+  boost::function<bool(epos_hardware::ClearFaults::Request & req, epos_hardware::ClearFaults::Response & res)>
+  clear_faults_cb = boost::bind(&clearFaults, _1, _2, &robot);
 
   ros::ServiceServer stop_motor_homing = nh.advertiseService("stop_motor_homing", stop_homing_cb);
   ros::ServiceServer start_motor_homing = nh.advertiseService("start_motor_homing", start_homing_cb);
+  ros::ServiceServer clear_faults = nh.advertiseService("clear_faults", clear_faults_cb);
 
   ROS_INFO("Initializing Motors");
   if(!robot.init()) {

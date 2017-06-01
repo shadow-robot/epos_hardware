@@ -104,4 +104,8 @@ bool EposHardware::stop_homing() {
 bool EposHardware::start_homing() {
   return epos_manager_.start_homing();
 }
+
+bool EposHardware::clear_faults() {
+  return epos_manager_.clear_faults();
+}
 }

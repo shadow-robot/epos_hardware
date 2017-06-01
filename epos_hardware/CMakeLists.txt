@@ -16,6 +16,7 @@ add_service_files(
   FILES
   StopHoming.srv
   StartHoming.srv
+  ClearFaults.srv
 )
 
 generate_messages(

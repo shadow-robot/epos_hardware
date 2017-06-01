@@ -69,4 +69,16 @@ bool EposManager::start_homing(){
     return success;
 }
 
+bool EposManager::clear_faults(){
+    bool success = true;
+    BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors_) {
+        if(!motor->clear_faults()){
+          ROS_ERROR_STREAM("Could not clear faults: " << motor->name());
+          success = false;
+        }
+    }
+    return success;
+}
+
+
 }
