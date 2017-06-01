@@ -24,6 +24,7 @@ public:
   bool init();
   void read();
   void write();
+  bool clear_faults();
   void update_diagnostics();
 private:
   hardware_interface::ActuatorStateInterface asi;

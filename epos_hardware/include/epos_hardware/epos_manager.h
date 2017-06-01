@@ -26,6 +26,7 @@ public:
   void write();
   bool stop_homing();
   bool start_homing();
+  bool clear_faults();
   void update_diagnostics();
   std::vector<boost::shared_ptr<Epos> > motors() { return motors_; };
 private:

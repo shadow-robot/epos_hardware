@@ -116,4 +116,8 @@ bool EposHardware::startHomingSrv(epos_hardware::StartHoming::Request &req,
     if(res.started == true)
         return true;
 }
+
+bool EposHardware::clear_faults() {
+  return epos_manager_.clear_faults();
+}
 }
