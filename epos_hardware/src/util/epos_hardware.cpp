@@ -119,6 +119,7 @@ bool EposHardware::disableMotorsSrv(epos_hardware::DisableMotors::Request &req,
     res.disabled = epos_manager_.disable_motors();
     if(res.disabled == true)
         return true;
+
 }
 
 bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,
@@ -127,6 +128,7 @@ bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,
     res.stopped = epos_manager_.stop_homing();
     if(res.stopped == true)
         return true;
+
 }
 
 bool EposHardware::startHomingSrv(epos_hardware::StartHoming::Request &req,
@@ -135,6 +137,7 @@ bool EposHardware::startHomingSrv(epos_hardware::StartHoming::Request &req,
     res.started = epos_manager_.start_homing();
     if(res.started == true)
         return true;
+
 }
 
 bool EposHardware::clearFaultsSrv(epos_hardware::ClearFaults::Request &req,

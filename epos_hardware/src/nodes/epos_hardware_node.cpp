@@ -5,24 +5,6 @@
 #include <vector>
 
 
-bool enableMotors(epos_hardware::EnableMotors::Request &req,
-    epos_hardware::EnableMotors::Response &res, epos_hardware::EposHardware* robot)
-{
-    res.enabled = robot->enable_motors();
-    if(res.enabled == true)
-        return true;
-
-}
-
-bool disableMotors(epos_hardware::DisableMotors::Request &req,
-    epos_hardware::DisableMotors::Response &res, epos_hardware::EposHardware* robot)
-{
-    res.disabled = robot->disable_motors();
-    if(res.disabled == true)
-        return true;
-
-}
-
 int main(int argc, char** argv) {
   ros::init(argc, argv, "epos_velocity_hardware");
   ros::NodeHandle nh;
