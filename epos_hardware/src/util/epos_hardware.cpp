@@ -103,11 +103,11 @@ void EposHardware::write() {
 }
 
 bool EposHardware::enable_motors() {
-  return epos_manager_.clear_faults();
+  return epos_manager_.enable_motors();
 }
 
 bool EposHardware::disable_motors() {
-  return epos_manager_.clear_faults();
+  return epos_manager_.disable_motors();
 }
 
 bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,
