@@ -47,6 +47,28 @@ void EposManager::write() {
   }
 }
 
+bool EposManager::enable_motors(){
+    bool success = true;
+    BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors_) {
+        if(!motor->enable_motors()){
+          ROS_ERROR_STREAM("Could not enable motor: " << motor->name());
+          success = false;
+        }
+    }
+    return success;
+}
+
+bool EposManager::disable_motors(){
+    bool success = true;
+    BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors_) {
+        if(!motor->disable_motors()){
+          ROS_ERROR_STREAM("Could not disable motor: " << motor->name());
+          success = false;
+        }
+    }
+    return success;
+}
+
 bool EposManager::stop_homing(){
     bool success = true;
     BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors_) {

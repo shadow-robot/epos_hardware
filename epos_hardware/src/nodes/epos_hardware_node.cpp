@@ -3,7 +3,28 @@
 #include "epos_hardware/epos_hardware.h"
 #include <controller_manager/controller_manager.h>
 #include <vector>
+#include "epos_hardware/EnableMotors.h"
+#include "epos_hardware/DisableMotors.h"
 
+
+
+bool enableMotors(epos_hardware::EnableMotors::Request &req,
+    epos_hardware::EnableMotors::Response &res, epos_hardware::EposHardware* robot)
+{
+    res.enabled = robot->enable_motors();
+    if(res.enabled == true)
+        return true;
+
+}
+
+bool disableMotors(epos_hardware::DisableMotors::Request &req,
+    epos_hardware::DisableMotors::Response &res, epos_hardware::EposHardware* robot)
+{
+    res.disabled = robot->disable_motors();
+    if(res.disabled == true)
+        return true;
+
+}
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "epos_velocity_hardware");
@@ -19,6 +40,9 @@ int main(int argc, char** argv) {
 
   ros::AsyncSpinner spinner(3);
   spinner.start();
+  ros::ServiceServer enable_motors = nh.advertiseService("enable_motors", enable_motors_cb);
+  ros::ServiceServer disable_motors = nh.advertiseService("disable_motors", disable_motors_cb);
+
 
   ROS_INFO("Initializing Motors");
   if(!robot.init()) {

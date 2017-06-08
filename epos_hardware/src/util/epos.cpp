@@ -509,10 +509,6 @@ bool Epos::init() {
     torque_constant_ = 1.0;
   }
 
-    ROS_INFO_STREAM("Enabling Motor");
-    if(!VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
-      return false;
-
     has_init_ = true;
     return true;
   }
@@ -686,6 +682,20 @@ void Epos::buildMotorOutputStatus(diagnostic_updater::DiagnosticStatusWrapper &s
   else {
     stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "EPOS not initialized");
   }
+}
+bool Epos::enable_motors(){
+    unsigned int error_code;
+    ROS_INFO_STREAM("Enabling Motor");
+    if(!VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
+      return false;
+}
+
+bool Epos::disable_motors(){
+    unsigned int error_code;
+    ROS_INFO_STREAM("Disabling Motor");
+    if(!VCS_SetDisableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
+      return false;
+
 }
 
 bool Epos::stop_homing(){

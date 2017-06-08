@@ -25,6 +25,8 @@ public:
   bool init();
   void read();
   void write();
+  bool enable_motors();
+  bool disable_motors();
   void update_diagnostics();
 private:
   hardware_interface::ActuatorStateInterface asi;
