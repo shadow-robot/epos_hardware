@@ -42,7 +42,7 @@ private:
                        epos_hardware::EnableMotors::Response &res);
 
   bool disableMotorsSrv(epos_hardware::DisableMotors::Request &req,
-                       epos_hardware::DisableMotors::Response &res);
+                        epos_hardware::DisableMotors::Response &res);
 
   bool stopHomingSrv(epos_hardware::StopHoming::Request &req,
                      epos_hardware::StopHoming::Response &res);
