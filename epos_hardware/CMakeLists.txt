@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_service_files(
   FILES
+  EnableMotors.srv
+  DisableMotors.srv
   StopHoming.srv
   StartHoming.srv
   ClearFaults.srv

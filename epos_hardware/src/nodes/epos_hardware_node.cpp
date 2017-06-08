@@ -3,6 +3,8 @@
 #include "epos_hardware/epos_hardware.h"
 #include <controller_manager/controller_manager.h>
 #include <vector>
+#include "epos_hardware/EnableMotors.h"
+#include "epos_hardware/DisableMotors.h"
 #include "epos_hardware/StopHoming.h"
 #include "epos_hardware/StartHoming.h"
 #include "epos_hardware/ClearFaults.h"
@@ -33,6 +35,24 @@ bool clearFaults(epos_hardware::ClearFaults::Request &req,
 
 }
 
+bool enableMotors(epos_hardware::EnableMotors::Request &req,
+    epos_hardware::EnableMotors::Response &res, epos_hardware::EposHardware* robot)
+{
+    res.enabled = robot->enable_motors();
+    if(res.enabled == true)
+        return true;
+
+}
+
+bool disableMotors(epos_hardware::DisableMotors::Request &req,
+    epos_hardware::DisableMotors::Response &res, epos_hardware::EposHardware* robot)
+{
+    res.disabled = robot->disable_motors();
+    if(res.disabled == true)
+        return true;
+
+}
+
 int main(int argc, char** argv) {
   ros::init(argc, argv, "epos_velocity_hardware");
   ros::NodeHandle nh;
@@ -54,10 +74,16 @@ int main(int argc, char** argv) {
   start_homing_cb = boost::bind(&startHoming, _1, _2, &robot);
   boost::function<bool(epos_hardware::ClearFaults::Request & req, epos_hardware::ClearFaults::Response & res)>
   clear_faults_cb = boost::bind(&clearFaults, _1, _2, &robot);
+  boost::function<bool(epos_hardware::EnableMotors::Request & req, epos_hardware::EnableMotors::Response & res)>
+  enable_motors_cb = boost::bind(&enableMotors, _1, _2, &robot);
+  boost::function<bool(epos_hardware::DisableMotors::Request & req, epos_hardware::DisableMotors::Response & res)>
+  disable_motors_cb = boost::bind(&disableMotors, _1, _2, &robot);
 
   ros::ServiceServer stop_motor_homing = nh.advertiseService("stop_motor_homing", stop_homing_cb);
   ros::ServiceServer start_motor_homing = nh.advertiseService("start_motor_homing", start_homing_cb);
   ros::ServiceServer clear_faults = nh.advertiseService("clear_faults", clear_faults_cb);
+  ros::ServiceServer enable_motors = nh.advertiseService("enable_motors", enable_motors_cb);
+  ros::ServiceServer disable_motors = nh.advertiseService("disable_motors", disable_motors_cb);
 
   ROS_INFO("Initializing Motors");
   if(!robot.init()) {

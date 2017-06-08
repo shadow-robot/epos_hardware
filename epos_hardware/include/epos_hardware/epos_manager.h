@@ -24,6 +24,8 @@ public:
   bool init();
   void read();
   void write();
+  bool enable_motors();
+  bool disable_motors();
   bool stop_homing();
   bool start_homing();
   bool clear_faults();
