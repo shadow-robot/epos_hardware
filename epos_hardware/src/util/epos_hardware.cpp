@@ -76,6 +76,7 @@ EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std:
   // Advertise services
   stop_motor_homing = nh.advertiseService("stop_motor_homing", &EposHardware::stopHomingSrv, this);
   start_motor_homing = nh.advertiseService("start_motor_homing", &EposHardware::startHomingSrv, this);
+  clear_faults = nh.advertiseService("clear_faults", &EposHardware::clearFaultsSrv, this);
 
 }
 
@@ -117,7 +118,12 @@ bool EposHardware::startHomingSrv(epos_hardware::StartHoming::Request &req,
         return true;
 }
 
-bool EposHardware::clear_faults() {
-  return epos_manager_.clear_faults();
+bool EposHardware::clearFaultsSrv(epos_hardware::ClearFaults::Request &req,
+    epos_hardware::ClearFaults::Response &res)
+{
+    res.clear_faults = epos_manager_.clear_faults();
+    if(res.clear_faults == true)
+        return true;
+
 }
 }

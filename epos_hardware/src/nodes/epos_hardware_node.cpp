@@ -3,17 +3,7 @@
 #include "epos_hardware/epos_hardware.h"
 #include <controller_manager/controller_manager.h>
 #include <vector>
-#include "epos_hardware/ClearFaults.h"
 
-
-bool clearFaults(epos_hardware::ClearFaults::Request &req,
-    epos_hardware::ClearFaults::Response &res, epos_hardware::EposHardware* robot)
-{
-    res.clear_faults = robot->clear_faults();
-    if(res.clear_faults == true)
-        return true;
-
-}
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "epos_velocity_hardware");
@@ -29,10 +19,6 @@ int main(int argc, char** argv) {
 
   ros::AsyncSpinner spinner(3);
   spinner.start();
-
-  boost::function<bool(epos_hardware::ClearFaults::Request & req, epos_hardware::ClearFaults::Response & res)>
-  clear_faults_cb = boost::bind(&clearFaults, _1, _2, &robot);
-  ros::ServiceServer clear_faults = nh.advertiseService("clear_faults", clear_faults_cb);
 
   ROS_INFO("Initializing Motors");
   if(!robot.init()) {

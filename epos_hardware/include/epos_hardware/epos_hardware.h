@@ -14,6 +14,7 @@
 #include "epos_hardware/epos_manager.h"
 #include "epos_hardware/StopHoming.h"
 #include "epos_hardware/StartHoming.h"
+#include "epos_hardware/ClearFaults.h"
 
 
 namespace epos_hardware {
@@ -24,7 +25,6 @@ public:
   bool init();
   void read();
   void write();
-  bool clear_faults();
   void update_diagnostics();
 private:
   hardware_interface::ActuatorStateInterface asi;
@@ -42,7 +42,10 @@ private:
   bool startHomingSrv(epos_hardware::StartHoming::Request &req,
                       epos_hardware::StartHoming::Response &res);
 
-  ros::ServiceServer stop_motor_homing, start_motor_homing;
+  bool clearFaultsSrv(epos_hardware::ClearFaults::Request &req,
+                      epos_hardware::ClearFaults::Response &res);
+
+  ros::ServiceServer stop_motor_homing, start_motor_homing, clear_faults;
 };
 
 }
