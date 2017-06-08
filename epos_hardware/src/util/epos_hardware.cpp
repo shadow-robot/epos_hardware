@@ -126,4 +126,5 @@ bool EposHardware::clearFaultsSrv(epos_hardware::ClearFaults::Request &req,
         return true;
 
 }
+
 }
