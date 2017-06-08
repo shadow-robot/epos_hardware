@@ -120,8 +120,6 @@ bool EposHardware::disableMotorsSrv(epos_hardware::DisableMotors::Request &req,
     if(res.disabled == true)
         return true;
 
-}
-
 bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,
     epos_hardware::StopHoming::Response &res)
 {
