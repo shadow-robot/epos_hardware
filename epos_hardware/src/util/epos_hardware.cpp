@@ -105,7 +105,7 @@ void EposHardware::write() {
 }
 
 bool EposHardware::enableMotorsSrv(epos_hardware::EnableMotors::Request &req,
-    epos_hardware::EnableMotors::Response &res)
+                                   epos_hardware::EnableMotors::Response &res)
 {
     res.enabled = epos_manager_.enable_motors();
     if(res.enabled == true)
@@ -114,14 +114,14 @@ bool EposHardware::enableMotorsSrv(epos_hardware::EnableMotors::Request &req,
 }
 
 bool EposHardware::disableMotorsSrv(epos_hardware::DisableMotors::Request &req,
-    epos_hardware::DisableMotors::Response &res)
+                                    epos_hardware::DisableMotors::Response &res)
 {
     res.disabled = epos_manager_.disable_motors();
     if(res.disabled == true)
         return true;
 
 bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,
-    epos_hardware::StopHoming::Response &res)
+                                 epos_hardware::StopHoming::Response &res)
 {
     res.stopped = epos_manager_.stop_homing();
     if(res.stopped == true)
@@ -129,7 +129,7 @@ bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,
 }
 
 bool EposHardware::startHomingSrv(epos_hardware::StartHoming::Request &req,
-    epos_hardware::StartHoming::Response &res)
+                                  epos_hardware::StartHoming::Response &res)
 {
     res.started = epos_manager_.start_homing();
     if(res.started == true)
@@ -137,7 +137,7 @@ bool EposHardware::startHomingSrv(epos_hardware::StartHoming::Request &req,
 }
 
 bool EposHardware::clearFaultsSrv(epos_hardware::ClearFaults::Request &req,
-    epos_hardware::ClearFaults::Response &res)
+                                  epos_hardware::ClearFaults::Response &res)
 {
     res.clear_faults = epos_manager_.clear_faults();
     if(res.clear_faults == true)
