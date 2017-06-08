@@ -74,6 +74,8 @@ EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std:
   }
 
   // Advertise services
+  enable_motors = nh.advertiseService("enable_motors", &EposHardware::enableMotorsSrv, this);
+  disable_motors = nh.advertiseService("disable_motors", &EposHardware::disableMotorsSrv, this);
   stop_motor_homing = nh.advertiseService("stop_motor_homing", &EposHardware::stopHomingSrv, this);
   start_motor_homing = nh.advertiseService("start_motor_homing", &EposHardware::startHomingSrv, this);
   clear_faults = nh.advertiseService("clear_faults", &EposHardware::clearFaultsSrv, this);
@@ -102,12 +104,22 @@ void EposHardware::write() {
   epos_manager_.write();
 }
 
-bool EposHardware::enable_motors() {
-  return epos_manager_.enable_motors();
+bool EposHardware::enableMotorsSrv(epos_hardware::EnableMotors::Request &req,
+    epos_hardware::EnableMotors::Response &res)
+{
+    res.enabled = epos_manager_.enable_motors();
+    if(res.enabled == true)
+        return true;
+
 }
 
-bool EposHardware::disable_motors() {
-  return epos_manager_.disable_motors();
+bool EposHardware::disableMotorsSrv(epos_hardware::DisableMotors::Request &req,
+    epos_hardware::DisableMotors::Response &res)
+{
+    res.disabled = epos_manager_.disable_motors();
+    if(res.disabled == true)
+        return true;
+
 }
 
 bool EposHardware::stopHomingSrv(epos_hardware::StopHoming::Request  &req,

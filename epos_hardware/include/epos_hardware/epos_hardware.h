@@ -12,6 +12,8 @@
 #include "epos_hardware/utils.h"
 #include "epos_hardware/epos.h"
 #include "epos_hardware/epos_manager.h"
+#include "epos_hardware/EnableMotors.h"
+#include "epos_hardware/DisableMotors.h"
 #include "epos_hardware/StopHoming.h"
 #include "epos_hardware/StartHoming.h"
 #include "epos_hardware/ClearFaults.h"
@@ -25,8 +27,6 @@ public:
   bool init();
   void read();
   void write();
-  bool enable_motors();
-  bool disable_motors();
   void update_diagnostics();
 private:
   hardware_interface::ActuatorStateInterface asi;
@@ -38,6 +38,12 @@ private:
   transmission_interface::RobotTransmissions robot_transmissions;
   boost::scoped_ptr<transmission_interface::TransmissionInterfaceLoader> transmission_loader;
 
+  bool enableMotorsSrv(epos_hardware::EnableMotors::Request &req,
+                       epos_hardware::EnableMotors::Response &res);
+
+  bool disableMotorsSrv(epos_hardware::DisableMotors::Request &req,
+                       epos_hardware::DisableMotors::Response &res);
+
   bool stopHomingSrv(epos_hardware::StopHoming::Request &req,
                      epos_hardware::StopHoming::Response &res);
 
@@ -47,7 +53,7 @@ private:
   bool clearFaultsSrv(epos_hardware::ClearFaults::Request &req,
                       epos_hardware::ClearFaults::Response &res);
 
-  ros::ServiceServer stop_motor_homing, start_motor_homing, clear_faults;
+  ros::ServiceServer enable_motors, disable_motors, stop_motor_homing, start_motor_homing, clear_faults;
 };
 
 }
