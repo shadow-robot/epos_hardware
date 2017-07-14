@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 
   ROS_INFO("Motors Initialized");
 
-  ros::Rate controller_rate(50);
+  ros::Rate controller_rate(100);
   ros::Time last = ros::Time::now();
   while (ros::ok()) {
     robot.read();
