@@ -18,10 +18,9 @@ class EposManager {
 public:
   EposManager(hardware_interface::ActuatorStateInterface& asi,
 	      hardware_interface::VelocityActuatorInterface& avi,
-	      hardware_interface::PositionActuatorInterface& api,
-	      ros::NodeHandle& nh, ros::NodeHandle& pnh,
-	      const std::vector<std::string>& motor_names);
-  bool init();
+	      hardware_interface::PositionActuatorInterface& api);
+  bool init(ros::NodeHandle& nh, ros::NodeHandle& pnh,
+    const std::vector<std::string>& motor_names);
   void read();
   void write();
   bool enable_motors();

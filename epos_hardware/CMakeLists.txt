@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   diagnostic_updater
   std_msgs
   message_generation
+  combined_robot_hw
 )
 
 add_service_files(
@@ -29,7 +30,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES epos_library_utils epos_manager epos_hardware
-  CATKIN_DEPENDS epos_library hardware_interface roscpp controller_manager diagnostic_updater
+  CATKIN_DEPENDS epos_library hardware_interface roscpp controller_manager diagnostic_updater combined_robot_hw
 )
 
 ###########
@@ -82,12 +83,6 @@ target_link_libraries(epos_hardware
 )
 
 
-add_executable(epos_hardware_node src/nodes/epos_hardware_node.cpp)
-target_link_libraries(epos_hardware_node
-  ${catkin_LIBRARIES}
-  epos_hardware
-)
-
 #############
 ## Install ##
 #############
@@ -107,7 +102,7 @@ install(DIRECTORY launch
 )
 
 # Mark libraries and nodes for installation
-install(TARGETS epos_library_utils epos_manager epos_hardware list_devices get_state epos_hardware_node
+install(TARGETS epos_library_utils epos_manager epos_hardware list_devices get_state
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
