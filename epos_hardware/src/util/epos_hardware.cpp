@@ -11,10 +11,16 @@ EposHardware::EposHardware()
 bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh) 
 {
   ROS_ERROR_STREAM("I'm in init");
-  if(pnh.searchParam("/my_joint_actuator/", epos_hardwares_))
+  if(pnh.getParam("/epos_robot_hw/", epos_hardwares_))
   {
-    motor_names_.push_back("my_joint_actuator");
+    std::cout<<epos_hardwares_.getType() <<std::endl;
+    for (XmlRpc::XmlRpcValue::iterator i=epos_hardwares_.begin(); i!=epos_hardwares_.end(); ++i) 
+    {
+        motor_names_.push_back(i->first);
+    }
   }
+    //motor_names_.push_back("my_joint_actuator");
+
   
   // {
   //   ROS_ERROR_STREAM("Found epos_hardware param");
