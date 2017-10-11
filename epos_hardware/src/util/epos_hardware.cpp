@@ -9,7 +9,7 @@ EposHardware::EposHardware() : epos_manager_()
 
 bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh) 
 {
-  using namespace hardware_interface;
+
 
   if(pnh.getParam("/epos_robot_hw", epos_hardwares_))
   {
