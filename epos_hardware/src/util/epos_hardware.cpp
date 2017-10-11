@@ -6,58 +6,43 @@ namespace epos_hardware {
 EposHardware::EposHardware()
   : epos_manager_(asi, avi, api)
 {
+    // TODO throw exception or something
+    try {
+      ROS_ERROR_STREAM("Try");
+      transmission_loader.reset(new transmission_interface::TransmissionInterfaceLoader(this, &robot_transmissions));
+    }
+    catch(const std::invalid_argument& ex){
+      ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
+      return;
+    }
+    catch(const pluginlib::LibraryLoadException& ex){
+      ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
+      return;
+    }
+    catch(...){
+      ROS_ERROR_STREAM("Failed to create transmission interface loader. ");
+      return;
+    }
+  
+    registerInterface(&asi);
+    registerInterface(&avi);
+    registerInterface(&api);
 }
 
 bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh) 
 {
+  using namespace hardware_interface;
+
   ROS_ERROR_STREAM("I'm in init");
-  if(pnh.getParam("/epos_robot_hw/", epos_hardwares_))
+  if(pnh.getParam("/epos_robot_hw", epos_hardwares_))
   {
     std::cout<<epos_hardwares_.getType() <<std::endl;
     for (XmlRpc::XmlRpcValue::iterator i=epos_hardwares_.begin(); i!=epos_hardwares_.end(); ++i) 
     {
+      if(i->first != "type")
         motor_names_.push_back(i->first);
     }
   }
-    //motor_names_.push_back("my_joint_actuator");
-
-  
-  // {
-  //   ROS_ERROR_STREAM("Found epos_hardware param");
-  //   for (XmlRpc::XmlRpcValue::iterator i=epos_hardwares_.begin(); i!=epos_hardwares_.end(); ++i) 
-  //   {
-  //     ROS_ERROR_STREAM("Get motor names");
-  //     motor_names_.push_back(i->first);
-  //   }
-  // }
-  // else
-  //   ROS_ERROR_STREAM("did not find epos");
-  
-  
-  
-  // TODO throw exception or something
-  try {
-    ROS_ERROR_STREAM("Try");
-    transmission_loader.reset(new transmission_interface::TransmissionInterfaceLoader(this, &robot_transmissions));
-  }
-  catch(const std::invalid_argument& ex){
-    ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
-    return false;
-  }
-  catch(const pluginlib::LibraryLoadException& ex){
-    ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
-    return false;
-  }
-  catch(...){
-    ROS_ERROR_STREAM("Failed to create transmission interface loader. ");
-    return false;
-  }
-
-  registerInterface(&asi);
-  registerInterface(&avi);
-  registerInterface(&api);
-  
-  ROS_ERROR_STREAM("Registered interfaces");
 
   std::string urdf_string;
   nh.getParam("robot_description", urdf_string);
