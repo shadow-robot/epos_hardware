@@ -16,11 +16,13 @@ namespace epos_hardware {
 
 class EposManager {
 public:
-  EposManager(hardware_interface::ActuatorStateInterface& asi,
-	      hardware_interface::VelocityActuatorInterface& avi,
-	      hardware_interface::PositionActuatorInterface& api);
-  bool init(ros::NodeHandle& nh, ros::NodeHandle& pnh,
-    const std::vector<std::string>& motor_names);
+  EposManager();
+  void construct_motors(ros::NodeHandle& nh, ros::NodeHandle& pnh,
+    const std::vector<std::string>& motor_names,
+    hardware_interface::ActuatorStateInterface& asi,
+    hardware_interface::VelocityActuatorInterface& avi,
+    hardware_interface::PositionActuatorInterface& api);
+  bool init();
   void read();
   void write();
   bool enable_motors();
@@ -34,9 +36,9 @@ private:
   std::vector<boost::shared_ptr<Epos> > motors_;
   EposFactory epos_factory;
 
-  hardware_interface::ActuatorStateInterface* asi_;
-  hardware_interface::VelocityActuatorInterface* avi_;
-  hardware_interface::PositionActuatorInterface* api_;
+  // hardware_interface::ActuatorStateInterface* asi_;
+  // hardware_interface::VelocityActuatorInterface* avi_;
+  // hardware_interface::PositionActuatorInterface* api_;
 };
 
 }

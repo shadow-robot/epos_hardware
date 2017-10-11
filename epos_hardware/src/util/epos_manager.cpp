@@ -4,15 +4,20 @@
 
 namespace epos_hardware {
 
-EposManager::EposManager(hardware_interface::ActuatorStateInterface& asi,
-  hardware_interface::VelocityActuatorInterface& avi,
-  hardware_interface::PositionActuatorInterface& api)
-  : asi_(&asi), avi_(&avi), api_(&api) {
+EposManager::EposManager()
+{
 }
 
-bool EposManager::init(ros::NodeHandle& nh, ros::NodeHandle& pnh,
-  const std::vector<std::string>& motor_names)
+void EposManager::construct_motors(ros::NodeHandle& nh, ros::NodeHandle& pnh,
+  const std::vector<std::string>& motor_names,
+  hardware_interface::ActuatorStateInterface& asi,
+  hardware_interface::VelocityActuatorInterface& avi,
+  hardware_interface::PositionActuatorInterface& api)
 {
+  hardware_interface::ActuatorStateInterface* asi_(&asi);
+  hardware_interface::VelocityActuatorInterface* avi_(&avi);
+  hardware_interface::PositionActuatorInterface* api_(&api);
+
   BOOST_FOREACH(const std::string& motor_name, motor_names)
   {
     ROS_INFO_STREAM("Loading EPOS: " << motor_name);
@@ -20,6 +25,10 @@ bool EposManager::init(ros::NodeHandle& nh, ros::NodeHandle& pnh,
     boost::shared_ptr<Epos> motor(new Epos(motor_name, nh, motor_config_nh, &epos_factory, *asi_, *avi_, *api_));
     motors_.push_back(motor);
   }
+}
+
+bool EposManager::init()
+{
   bool success = true;
   BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors_) {
     if(!motor->init()) {
