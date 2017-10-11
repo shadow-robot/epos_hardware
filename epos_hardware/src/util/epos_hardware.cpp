@@ -9,8 +9,7 @@ EposHardware::EposHardware() : epos_manager_()
 
 bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh) 
 {
-
-
+  // Get motor names
   if(pnh.getParam("/epos_robot_hw", epos_hardwares_))
   {
     std::cout<<epos_hardwares_.getType() <<std::endl;
@@ -66,7 +65,7 @@ bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh)
   BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors) {
     actuator_names.push_back(motor->actuator_name());
   }
-  
+
   // Load all transmissions that are for the loaded motors
   BOOST_FOREACH(const transmission_interface::TransmissionInfo& info, infos) 
   {
@@ -82,7 +81,6 @@ bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh)
       {
         found_all = false;
       }
-        
     }
     if(found_all)
     {
