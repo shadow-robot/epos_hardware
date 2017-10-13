@@ -10,12 +10,12 @@ EposHardware::EposHardware() : epos_manager_()
 bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh) 
 {
   // Get motor names
-  if(pnh.getParam("/epos_robot_hw", epos_hardwares_))
+  if (pnh.getParam("/epos_robot_hw", epos_hardwares_))
   {
     std::cout<<epos_hardwares_.getType() <<std::endl;
     for (XmlRpc::XmlRpcValue::iterator i=epos_hardwares_.begin(); i!=epos_hardwares_.end(); ++i) 
     {
-      if(i->first != "type")
+      if (i->first != "type")
         motor_names_.push_back(i->first);
     }
   }
