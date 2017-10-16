@@ -532,20 +532,26 @@ void Epos::read() {
   short current_raw;
   VCS_GetPositionIs(node_handle_->device_handle->ptr, node_handle_->node_id, &position_raw, &error_code);
   ros::Time get_position = ros::Time::now();
-  ROS_WARN_STREAM("Read Time To Get Position" << get_position - after_object);
-  VCS_GetVelocityIs(node_handle_->device_handle->ptr, node_handle_->node_id, &velocity_raw, &error_code);
-  VCS_GetCurrentIs(node_handle_->device_handle->ptr, node_handle_->node_id, &current_raw, &error_code);
+  ROS_WARN_STREAM("Read Time To Get Position: " << get_position - after_object);
+  //VCS_GetVelocityIs(node_handle_->device_handle->ptr, node_handle_->node_id, &velocity_raw, &error_code);
+  //ros::Time get_velocity = ros::Time::now();
+  //ROS_WARN_STREAM("Read Time To Get Velocity: " << get_velocity - get_position);
+  //VCS_GetCurrentIs(node_handle_->device_handle->ptr, node_handle_->node_id, &current_raw, &error_code);
+  //ros::Time get_acceleration = ros::Time::now();
+  //ROS_WARN_STREAM("Read Time To Get Acceleration: " << get_acceleration - get_velocity);
   position_ = position_raw;
   velocity_ = velocity_raw;
   current_ = current_raw  / 1000.0; // mA -> A
   effort_ = current_ * torque_constant_;
-
+  ros::Time get_read_time = ros::Time::now();
+  ROS_WARN_STREAM("Read Time: " << get_read_time - now);
 }
 
 void Epos::write() {
   if(!has_init_)
     return;
-
+    ros::Time now = ros::Time::now();
+    ROS_WARN_STREAM("Read Time Before Calling Object" << now);
   unsigned int error_code;
   if(operation_mode_ == PROFILE_VELOCITY_MODE) {
     if(isnan(velocity_cmd_))
@@ -570,6 +576,8 @@ void Epos::write() {
       return;
     VCS_MoveToPosition(node_handle_->device_handle->ptr, node_handle_->node_id, (int)position_cmd_, true, true, &error_code);
   }
+  ros::Time get_write_time = ros::Time::now();
+  ROS_WARN_STREAM("Write Time: " << get_write_time - now);
 }
 
 void Epos::update_diagnostics() {

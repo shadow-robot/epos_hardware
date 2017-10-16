@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 
   ROS_INFO("Motors Initialized");
 
-  ros::Rate controller_rate(1000);
+  ros::Rate controller_rate(100);
   ros::Time last = ros::Time::now();
   while (ros::ok()) {
     robot.read();
@@ -36,8 +36,8 @@ int main(int argc, char** argv) {
     ros::Duration per(now-last);
     double secs = per.toSec();
     double freq = 1/(secs);
-    //ROS_WARN_STREAM("Frequency: " << freq);
-    ros::Duration period(0.001);
+    ROS_WARN_STREAM("Frequency: " << freq);
+    ros::Duration period(0.01);
     cm.update(now, period);
     robot.write();
     last = now;
