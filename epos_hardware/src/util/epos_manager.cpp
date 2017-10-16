@@ -36,6 +36,8 @@ void EposManager::update_diagnostics() {
 }
 
 void EposManager::read() {
+  ros::Time now = ros::Time::now();
+  ROS_WARN_STREAM("Read Time EPOS MANAGER" << now);
   BOOST_FOREACH(const boost::shared_ptr<Epos>& motor, motors_) {
     motor->read();
   }

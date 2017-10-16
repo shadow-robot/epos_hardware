@@ -33,6 +33,10 @@ int main(int argc, char** argv) {
   while (ros::ok()) {
     robot.read();
     ros::Time now = ros::Time::now();
+    ros::Duration per(now-last);
+    double secs = per.toSec();
+    double freq = 1/(secs);
+    //ROS_WARN_STREAM("Frequency: " << freq);
     ros::Duration period(0.001);
     cm.update(now, period);
     robot.write();
@@ -40,5 +44,4 @@ int main(int argc, char** argv) {
     robot.update_diagnostics();
     controller_rate.sleep();
   }
-
 }

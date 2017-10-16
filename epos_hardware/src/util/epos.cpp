@@ -521,12 +521,18 @@ void Epos::read() {
 
   // Read statusword
   unsigned int bytes_read;
+  ros::Time now = ros::Time::now();
+  ROS_WARN_STREAM("Read Time Before Calling Object" << now);
   VCS_GetObject(node_handle_->device_handle->ptr, node_handle_->node_id, 0x6041, 0x00, &statusword_, 2, &bytes_read, &error_code);
 
+  ros::Time after_object = ros::Time::now();
+  ROS_WARN_STREAM("Read Time After Calling Object" << after_object-now);
   int position_raw;
   int velocity_raw;
   short current_raw;
   VCS_GetPositionIs(node_handle_->device_handle->ptr, node_handle_->node_id, &position_raw, &error_code);
+  ros::Time get_position = ros::Time::now();
+  ROS_WARN_STREAM("Read Time To Get Position" << get_position - after_object);
   VCS_GetVelocityIs(node_handle_->device_handle->ptr, node_handle_->node_id, &velocity_raw, &error_code);
   VCS_GetCurrentIs(node_handle_->device_handle->ptr, node_handle_->node_id, &current_raw, &error_code);
   position_ = position_raw;

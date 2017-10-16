@@ -91,6 +91,8 @@ void EposHardware::update_diagnostics() {
 }
 
 void EposHardware::read() {
+  ros::Time now = ros::Time::now();
+  ROS_WARN_STREAM("Read Time EPOS HARDWARE" << now);
   epos_manager_.read();
   if(robot_transmissions.get<transmission_interface::ActuatorToJointStateInterface>())
     robot_transmissions.get<transmission_interface::ActuatorToJointStateInterface>()->propagate();
