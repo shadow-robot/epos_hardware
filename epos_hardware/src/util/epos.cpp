@@ -708,12 +708,16 @@ bool Epos::stop_homing(){
         return false;
     else
         return true;
-
 }
 
 bool Epos::start_homing(){
     unsigned int error_code;
     ROS_INFO("Configuring homing mode");
+
+    if(!VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
+      return false;
+    else
+      return true;
 
     VCS(SetOperationMode, HOMING_MODE);
 
@@ -787,13 +791,21 @@ bool Epos::start_homing(){
 }
 bool Epos::clear_faults(){
     unsigned int error_code;
+    unsigned char num_errors;
+    if(!VCS_GetNbOfDeviceError(node_handle_->device_handle->ptr, node_handle_->node_id, &num_errors, &error_code))
+      return false;
+    for(int i = 1; i<= num_errors; ++i) {
+      unsigned int error_number;
+      if(!VCS_GetDeviceErrorCode(node_handle_->device_handle->ptr, node_handle_->node_id, i, &error_number, &error_code))
+        return false;
+      ROS_WARN_STREAM("EPOS Device Error: 0x" << std::hex << error_number);
+    }
     if(!VCS_ClearFault(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
         return false;
     else{
-        VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code);
+        //VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code);
         VCS(SetOperationMode, operation_mode_);
         return true;
-
     }
 }
 
