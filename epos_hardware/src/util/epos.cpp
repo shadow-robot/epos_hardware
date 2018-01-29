@@ -798,7 +798,6 @@ bool Epos::clear_faults(){
     if(!VCS_ClearFault(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
         return false;
     else{
-        //VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code);
         VCS(SetOperationMode, operation_mode_);
         return true;
     }
