@@ -714,10 +714,10 @@ bool Epos::start_homing(){
     unsigned int error_code;
     ROS_INFO("Configuring homing mode");
 
-    if(!VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
-      return false;
-    else
-      return true;
+    //if(!VCS_SetEnableState(node_handle_->device_handle->ptr, node_handle_->node_id, &error_code))
+    //  return false;
+    //else
+    //  return true;
 
     VCS(SetOperationMode, HOMING_MODE);
 
