@@ -3,8 +3,22 @@
 
 namespace epos_hardware {
 
-EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std::vector<std::string>& motor_names)
-  : epos_manager_(asi, avi, api, nh, pnh, motor_names) {
+EposHardware::EposHardware() : epos_manager_()
+{    
+}
+
+bool EposHardware::init(ros::NodeHandle& nh, ros::NodeHandle& pnh) 
+{
+  // Get motor names
+  if (pnh.getParam("/epos_robot_hw", epos_hardwares_))
+  {
+    std::cout<<epos_hardwares_.getType() <<std::endl;
+    for (XmlRpc::XmlRpcValue::iterator i=epos_hardwares_.begin(); i!=epos_hardwares_.end(); ++i) 
+    {
+      if (i->first != "type")
+        motor_names_.push_back(i->first);
+    }
+  }
 
   // TODO throw exception or something
   try {
@@ -12,20 +26,22 @@ EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std:
   }
   catch(const std::invalid_argument& ex){
     ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
-    return;
+    return false;
   }
   catch(const pluginlib::LibraryLoadException& ex){
     ROS_ERROR_STREAM("Failed to create transmission interface loader. " << ex.what());
-    return;
+    return false;
   }
   catch(...){
     ROS_ERROR_STREAM("Failed to create transmission interface loader. ");
-    return;
+    return false;
   }
 
   registerInterface(&asi);
   registerInterface(&avi);
   registerInterface(&api);
+
+  epos_manager_.construct_motors(nh, pnh, motor_names_, asi, avi, api);
 
   std::string urdf_string;
   nh.getParam("robot_description", urdf_string);
@@ -40,7 +56,7 @@ EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std:
   // TODO: throw exception
   if (!parser.parse(urdf_string, infos)) {
     ROS_ERROR("Error parsing URDF");
-    return;
+    return false;
   }
 
   // build a list of all loaded actuator names
@@ -51,24 +67,32 @@ EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std:
   }
 
   // Load all transmissions that are for the loaded motors
-  BOOST_FOREACH(const transmission_interface::TransmissionInfo& info, infos) {
+  BOOST_FOREACH(const transmission_interface::TransmissionInfo& info, infos) 
+  {
     bool found_some = false;
     bool found_all = true;
-    BOOST_FOREACH(const transmission_interface::ActuatorInfo& actuator, info.actuators_) {
+    BOOST_FOREACH(const transmission_interface::ActuatorInfo& actuator, info.actuators_)
+    {
       if(std::find(actuator_names.begin(), actuator_names.end(), actuator.name_) != actuator_names.end())
-	found_some = true;
-      else
-	found_all = false;
-    }
-    if(found_all) {
-      if (!transmission_loader->load(info)) {
-	ROS_ERROR_STREAM("Error loading transmission: " << info.name_);
-	return;
+      {
+        found_some = true;
       }
       else
-	ROS_INFO_STREAM("Loaded transmission: " << info.name_);
+      {
+        found_all = false;
+      }
     }
-    else if(found_some){
+    if(found_all)
+    {
+      if (!transmission_loader->load(info)) {
+        ROS_ERROR_STREAM("Error loading transmission: " << info.name_);
+        return false;
+      }
+      else
+        ROS_INFO_STREAM("Loaded transmission: " << info.name_);
+    }
+    else if(found_some)
+    {
       ROS_ERROR_STREAM("Do not support transmissions that contain only some EPOS actuators: " << info.name_);
     }
   }
@@ -80,9 +104,7 @@ EposHardware::EposHardware(ros::NodeHandle& nh, ros::NodeHandle& pnh, const std:
   start_motor_homing = nh.advertiseService("start_motor_homing", &EposHardware::startHomingSrv, this);
   clear_faults = nh.advertiseService("clear_faults", &EposHardware::clearFaultsSrv, this);
 
-}
-
-bool EposHardware::init() {
+  
   return epos_manager_.init();
 }
 
@@ -90,13 +112,13 @@ void EposHardware::update_diagnostics() {
   epos_manager_.update_diagnostics();
 }
 
-void EposHardware::read() {
+void EposHardware::read(const ros::Time& time, const ros::Duration& period){
   epos_manager_.read();
   if(robot_transmissions.get<transmission_interface::ActuatorToJointStateInterface>())
     robot_transmissions.get<transmission_interface::ActuatorToJointStateInterface>()->propagate();
 }
 
-void EposHardware::write() {
+void EposHardware::write(const ros::Time& time, const ros::Duration& period) {
   if(robot_transmissions.get<transmission_interface::JointToActuatorVelocityInterface>())
     robot_transmissions.get<transmission_interface::JointToActuatorVelocityInterface>()->propagate();
   if(robot_transmissions.get<transmission_interface::JointToActuatorPositionInterface>())
@@ -150,3 +172,5 @@ bool EposHardware::clearFaultsSrv(epos_hardware::ClearFaults::Request &req,
 }
 
 }
+
+PLUGINLIB_EXPORT_CLASS(epos_hardware::EposHardware, hardware_interface::RobotHW)

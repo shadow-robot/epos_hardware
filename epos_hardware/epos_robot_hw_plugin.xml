@@ -1,0 +1,7 @@
+<library path="lib/libepos_hardware">
+  <class name="epos_hardware/EposHardware" type="epos_hardware::EposHardware" base_class_type="hardware_interface::RobotHW">
+  <description>
+    A type of RobotHW
+  </description>
+  </class>
+</library>
